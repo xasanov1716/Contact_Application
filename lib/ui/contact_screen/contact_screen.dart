@@ -56,11 +56,11 @@ class _ContactScreenState extends State<ContactScreen> {
             icon: const Icon(Icons.search, color: Colors.black),
           ),
           PopupMenuButton(
-              color: Colors.grey,
+              color: Colors.black,
               itemBuilder: (context) => [
                     PopupMenuItem(
                         child: PopupMenuButton(
-                      child: const Text("Sort by"),
+                      child: const Text("Sort by",style: TextStyle(color: Colors.white),),
                       itemBuilder: (context) => [
                          PopupMenuItem(
                           onTap: (){
@@ -83,7 +83,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     PopupMenuItem(
                       child: const Text(
                         "Delete all",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.red),
                       ),
                       onTap: () {
                         LocalDatabase.deleteContacts();
