@@ -90,6 +90,7 @@ class _ContactSearchScreenState extends State<ContactSearchScreen> {
                           MaterialPageRoute(
                             builder: (context) => SingleContactScreen(
                               id: contacts[index].id!,
+                              listening: (){_updateContacts();},
                             ),
                           ),
                         );

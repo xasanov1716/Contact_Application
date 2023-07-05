@@ -4,6 +4,8 @@ class ContactModelFields {
   static const String name = "name";
   static const String surname = "surname";
   static const String phone = "phone";
+  static const String photo = "photo";
+
 
   static const String contactsTable = "my_contacts";
 }
@@ -13,10 +15,12 @@ class ContactModelSql {
   final String name;
   final String surname;
   final String phone;
+  final String photo;
 
   ContactModelSql({
     this.id,
     required this.phone,
+    required this.photo,
     required this.name,
     required this.surname,
   });
@@ -25,12 +29,14 @@ class ContactModelSql {
     String? name,
     String? surname,
     String? phone,
+    String? photo,
     int? id,
   }) {
     return ContactModelSql(
       name: name ?? this.name,
       surname: surname ?? this.surname,
       phone: phone ?? this.phone,
+      photo: photo ?? this.photo,
       id: id ?? this.id,
     );
   }
@@ -40,6 +46,7 @@ class ContactModelSql {
       name: json[ContactModelFields.name] ?? "",
       surname: json[ContactModelFields.surname] ?? "",
       phone: json[ContactModelFields.phone] ?? "",
+      photo: json[ContactModelFields.photo] ?? "",
       id: json[ContactModelFields.id] ?? 0,
     );
   }
@@ -49,6 +56,7 @@ class ContactModelSql {
       ContactModelFields.name: name,
       ContactModelFields.surname: surname,
       ContactModelFields.phone: phone,
+      ContactModelFields.photo: photo,
     };
   }
 
@@ -58,6 +66,7 @@ class ContactModelSql {
       name: $name
       name: $surname
       phone: $phone
+      photo: $photo
       id: $id, 
     ''';
   }

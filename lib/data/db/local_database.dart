@@ -40,7 +40,8 @@ class LocalDatabase {
     ${ContactModelFields.id} $idType,
     ${ContactModelFields.name} $textType,
     ${ContactModelFields.surname} $textType,
-    ${ContactModelFields.phone} $textType
+    ${ContactModelFields.phone} $textType,
+    ${ContactModelFields.photo} $textType
     )
     ''');
 
