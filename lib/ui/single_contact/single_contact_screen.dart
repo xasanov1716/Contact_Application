@@ -23,7 +23,7 @@ class _SingleContactScreenState extends State<SingleContactScreen> {
   String surname = "";
   String phone = "";
   String photo = "";
-  late ContactModelSql contactModelSql ;
+  late ContactModelSql contactModelSql;
 
 
   _updateContacts() async {

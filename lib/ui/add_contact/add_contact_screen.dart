@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import '../../model/contact_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddContactScreen extends StatefulWidget {
   const AddContactScreen({Key? key, required this.listening}) : super(key: key);
@@ -26,6 +27,10 @@ class _AddContactScreenState extends State<AddContactScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController phoneController  = TextEditingController();
+  final FocusNode nameFocusNode = FocusNode();
+  final FocusNode surnameFocusNode = FocusNode();
+  final FocusNode phoneFocusNode = FocusNode();
+
 
 
   int selectImage = 0;
@@ -56,15 +61,15 @@ class _AddContactScreenState extends State<AddContactScreen> {
                   surname: surnameController.text,
                 ),
               );
-              print(imagePath[selectImage]);
-              print(phone);
+            if(context.mounted){
               widget.listening.call();
+              Navigator.pop(context);
+            }
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text("Contact successfully added!!! "),
+                  content: Text("Kontakt muvafaqiyatli qo'shildi"),
                 ),
               );
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const ContactScreen()));
             }
               else{
               ScaffoldMessenger.of(context).showSnackBar(
@@ -81,17 +86,19 @@ class _AddContactScreenState extends State<AddContactScreen> {
         children: [
           SizedBox(height: 20,),
            Padding(
-             padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+             padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
              child: const Text("Name",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,color: Colors.black),),
            ),
             const SizedBox(height: 8,),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
             child: TextField(
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
               ],
               controller: nameController,
+              focusNode: nameFocusNode,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Enter name",
@@ -101,16 +108,18 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           const SizedBox(height: 20,),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
             child: const Text("Surname",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,color: Colors.black),),
           ),
           const SizedBox(height: 8,),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
             child: TextField(
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
               ],
+              focusNode: surnameFocusNode,
+              textInputAction: TextInputAction.next,
               controller: surnameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -121,18 +130,26 @@ class _AddContactScreenState extends State<AddContactScreen> {
           ),
           const SizedBox(height: 20,),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
             child: const Text("Phone number",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,color: Colors.black),),
           ),
           const SizedBox(height: 8,),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
             child: TextField(
               inputFormatters: [maskFormatter],
+              focusNode: phoneFocusNode,
+              textInputAction: TextInputAction.done,
               keyboardType: TextInputType.phone,
+              onChanged: (number) {
+                if (number.length == 18) {
+                  phoneFocusNode.unfocus();
+                }
+              },
               controller: phoneController,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                  hintText: " _ _  _ _ _ _ _ ",
+                  border: OutlineInputBorder(),
                 prefixIcon: SizedBox(
                   width: 66,
                   child: Padding(
@@ -149,43 +166,42 @@ class _AddContactScreenState extends State<AddContactScreen> {
             ),
           ),
           const SizedBox(height: 20,),
-          SizedBox(
-            height: 100,
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              children: [
-                ...List.generate(imagePath.length, (index) => ZoomTapAnimation(
-                  onTap: (){
-                    setState(() {
-                      selectImage = index;
-                    });
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.withOpacity(0.1),
-                        ),
-                        child: Center(child: Image.asset(imagePath[index],width: 32,height: 32,),),
+      SizedBox(
+        height: 100,
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: [
+            ...List.generate(imagePath.length, (index) => ZoomTapAnimation(
+                onTap: (){
+                  setState(() {
+                    selectImage = index;
+                  });
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue.withOpacity(0.1),
                       ),
-                      selectImage==index ? Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          top: 0,
-                          child: Icon(Icons.done,size: 50,color: Colors.red,)) : SizedBox(),
+                      child: Center(child: Image.asset(imagePath[index],width: 32,height: 32,),),
+                    ),
+                    selectImage==index ? Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0,
+                        child: Icon(Icons.done,size: 50,color: Colors.green,)) : SizedBox(),
 
-                    ],
-                  )
-                ))
-              ],
-            ),
-          )
-        ],
+                  ],
+                )
+            ))
+          ],
+        ),
+      )],
       ),
     );
   }
@@ -193,12 +209,12 @@ class _AddContactScreenState extends State<AddContactScreen> {
 
 
 List<String> imagePath = [
-  "assets/images/rasm1.png",
   "assets/images/rasm2.png",
-  "assets/images/rasm3.png",
-  "assets/images/rasm4.png",
-  "assets/images/rasm5.png",
+  "assets/images/rasm1.png",
   "assets/images/rasm6.png",
-  "assets/images/rasm7.png",
+  "assets/images/rasm5.png",
+  "assets/images/rasm3.png",
   "assets/images/rasm8.png",
+  "assets/images/rasm4.png",
+  "assets/images/rasm7.png",
 ];

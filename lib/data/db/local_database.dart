@@ -152,4 +152,17 @@ class LocalDatabase {
         .toList();
     return allContacts;
   }
+
+  static Future<List<ContactModelSql>> getContactsByQuery(String query) async {
+    List<ContactModelSql> allToDos = [];
+    final db = await getInstance.database;
+    allToDos = (await db.query(
+      ContactModelFields.contactsTable,
+      where: "${ContactModelFields.name} LIKE ?",
+      whereArgs: [query],
+    ))
+        .map((e) => ContactModelSql.fromJson(e))
+        .toList();
+    return allToDos;
+  }
 }
